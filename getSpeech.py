@@ -3,6 +3,7 @@ import numpy as np
 import urllib3
 import collections
 import matplotlib.pyplot as plt
+import re
 
 fid = open('State of the Union Addresses of the Presidents of the United States.html','rb')
 l = fid.read()
