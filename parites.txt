@@ -43,3 +43,4 @@ William Jefferson Clinton, 1993-2001, D
 George Walker Bush, 2001-2009, R
 Barack Hussein Obama, 2009-2017, D
 Donald John Trump, 2017-2020, R
+Joseph Robinette Biden, 2020-2022, D
