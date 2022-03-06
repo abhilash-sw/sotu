@@ -2,7 +2,7 @@
 # @Author: Abhilash
 # @Date:   2022-03-03 22:13:11
 # @Last Modified by:   Abhilash
-# @Last Modified time: 2022-03-06 18:56:25
+# @Last Modified time: 2022-03-06 19:17:45
 
 import os
 import glob
@@ -135,7 +135,7 @@ for k in p_speeches.keys():
 rcParams['font.family'] = 'serif'
 
 fig, ax = plt.subplots()    
-fig.set_size_inches(12,20)
+fig.set_size_inches(16,20)
 width = 0.5 # the width of the bars 
 x = presi
 y = avg_counts
@@ -153,15 +153,23 @@ for i,b_tmp in enumerate(barlist):
                                                                                                                                             
 ax.set_yticks(ind)
 ax.set_yticklabels(x, minor=False,fontweight='bold',fontsize=18)
-plt.title('Average word count at State of the Union address by POTUS \n and their Most Distinguishing words',fontweight='bold',fontsize=20)
+plt.title('Average word count at State of the Union address by POTUS \n and their Most Distinguishing words',fontweight='bold',fontsize=24)
 plt.xlabel('Average word count',fontsize=18)
 ax.set_xlim([0,38000])
 ax.set_ylim([-1,len(x)])
 
 xtck = ax.get_xticks()
+xtck = xtck.astype(int)
 ax.set_xticklabels(xtck,minor=False,fontsize=16)
                                                                                                                                             
 for i, v in enumerate(y):
     ax.text(v + 500, i - 0.1, ', '.join(top_words[presi[i]][:5]), color='black', fontweight='bold',fontsize=13)
 
-fig.savefig('test_4.png',dpi=300,bbox_inches='tight')
+for axis in ['top','bottom','left','right']:
+    ax.spines[axis].set_linewidth(2.5)
+
+# increase tick width
+ax.tick_params(width=2.5)
+
+
+fig.savefig('test_4.png',dpi=500,bbox_inches='tight')
