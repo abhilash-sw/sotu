@@ -2,7 +2,7 @@
 # @Author: Abhilash
 # @Date:   2022-03-03 22:13:11
 # @Last Modified by:   Abhilash
-# @Last Modified time: 2022-03-04 07:47:50
+# @Last Modified time: 2022-03-06 18:56:25
 
 import os
 import glob
@@ -41,13 +41,16 @@ for p_line in p_lines:
 
 
 p_speeches = {}
+n_speeches = {}
 
 for p in p_names:
     p_speeches[p] = ''
+    n_speeches[p] = 0
     for y in p_names[p]:
         if str(y) not in speeches.keys():
         	continue
         p_speeches[p] = p_speeches[p] + speeches[str(y)]
+        n_speeches[p] = n_speeches[p] + 1
 
 list_p_speeches = []
 presi = []
@@ -56,7 +59,18 @@ for k in p_speeches.keys():
 	list_p_speeches.append(p_speeches[k])
 	presi.append(k)
 
+fid_party = open('parites.txt')
+party_lines = fid_party.readlines()
+fid_party.close()
 
+p_party = {}
+party = []
+for party_line in party_lines:
+    tmp1 = party_line.split(',')
+    p_party[tmp1[0]] = tmp1[-1][1]
+    party.append(tmp1[-1][1])
+
+######################
 
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
@@ -105,3 +119,49 @@ for i in range(len(list_p_speeches)):
     #print(vocab[itt[:10]])
     top_words[presi[i]] = vocab[itt]
 
+
+## avg counts
+
+avg_counts = []#{}
+presi = []
+
+for k in p_speeches.keys():
+    #avg_counts[k] = len(p_speeches[k].split(' '))/n_speeches[k]
+    avg_counts.append(len(p_speeches[k].split(' '))/n_speeches[k])
+    presi.append(k)
+
+
+## plotting
+rcParams['font.family'] = 'serif'
+
+fig, ax = plt.subplots()    
+fig.set_size_inches(12,20)
+width = 0.5 # the width of the bars 
+x = presi
+y = avg_counts
+ind = np.arange(len(y))  # the x locations for the groups
+                                                                                                                                            
+barlist = ax.barh(ind, y, width, color="blue",align='center', alpha=0.8)
+
+for i,b_tmp in enumerate(barlist):
+    if p_party[x[i]] == 'R':
+        b_tmp.set_color('#FF0000')
+    elif p_party[x[i]] == 'N':
+        b_tmp.set_color('k')
+    elif p_party[x[i]] == 'D':
+    	b_tmp.set_color('#0015BC')
+                                                                                                                                            
+ax.set_yticks(ind)
+ax.set_yticklabels(x, minor=False,fontweight='bold',fontsize=18)
+plt.title('Average word count at State of the Union address by POTUS \n and their Most Distinguishing words',fontweight='bold',fontsize=20)
+plt.xlabel('Average word count',fontsize=18)
+ax.set_xlim([0,38000])
+ax.set_ylim([-1,len(x)])
+
+xtck = ax.get_xticks()
+ax.set_xticklabels(xtck,minor=False,fontsize=16)
+                                                                                                                                            
+for i, v in enumerate(y):
+    ax.text(v + 500, i - 0.1, ', '.join(top_words[presi[i]][:5]), color='black', fontweight='bold',fontsize=13)
+
+fig.savefig('test_4.png',dpi=300,bbox_inches='tight')
